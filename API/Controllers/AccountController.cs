@@ -54,13 +54,13 @@ namespace API.Controllers
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.UserName);
             // if user doesn't exist in the database, unauthorize them
-            if (user == null) return Unauthorized();
+            if (user == null) return Unauthorized("This user doesn't exist");
             using var hmac = new HMACSHA512(user.PasswordSalt);
 
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-            for (int i = 0; i < 0; i++)
+            for (int i = 0; i < computedHash.Length; i++)
             {
-                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("invalidpassword");
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("invalid password");
             }
 
             return new UserDto 

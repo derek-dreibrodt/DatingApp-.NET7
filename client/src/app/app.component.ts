@@ -1,5 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnInit } from '@angular/core';
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -8,15 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit{
   // Typicall ordered 1. properties 2. constructor 3. methods
-  title = 'helol!';
-  users: any;
-  constructor(private http: HttpClient) {}
+  title = 'Dating App!';
+  constructor(private accountService: AccountService) {}
   ngOnInit(): void {
-    this.http.get("https://localhost:5001/api/users").subscribe({
-      next: response => this.users = response,
-      error: error => console.log(error),
-      complete: () => console.log('Request has completed')
-    });
+    this.setCurrentUser(); // sets user to token saved in local storage (browser storage)
   }
+
   
+  
+  setCurrentUser() {
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user: User = JSON.parse(userString);
+    console.log(user)
+    this.accountService.setCurrentUser(user);
+  }
 }
