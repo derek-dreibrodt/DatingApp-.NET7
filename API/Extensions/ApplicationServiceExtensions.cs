@@ -7,7 +7,7 @@ namespace API.Extensions
 {
     public static class ApplicationServiceExtensions
     {
-        public static void AddApplicationServices(this IServiceCollection services, 
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, 
         IConfiguration config)
         {
             services.AddDbContext<DataContext>(opts => 
@@ -19,6 +19,9 @@ namespace API.Extensions
             //builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            return services;
         }
     }
 }

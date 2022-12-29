@@ -1,5 +1,8 @@
+using API.Data;
+using API.Data.Migrations;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services
+    .AddApplicationServices(builder.Configuration);// Uses extension in Extensions/ApplicationServiceExtension for app-related services
+builder.Services
+    .AddIdentityServices(builder.Configuration); // Uses extension in Extensions/IdentityServiceExtension for identity-related services
 
 var app = builder.Build();
 
@@ -24,5 +29,23 @@ app.UseAuthorization(); // now that you have a token, what are you allowed to do
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
 app.MapControllers();
+
+
+// Starts use of a scope, which doesn't happen in httpcontext pipeline 
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider; // -> this allows scope of the services of the app
+
+
+try
+{
+    var context = services.GetRequiredService<DataContext>(); // Add the DbContext service to the scope of this try block in "context" var
+    await context.Database.MigrateAsync(); // Creates a clean database if it is deleted/doesn't have migrations applied
+    await Seed.SeedUsers(context); // calls seed user upon creation
+}
+catch (Exception ex)
+{
+    var logger = services.GetService<ILogger<Program>>(); // get the logger service into the scope and log an error if there is one
+    logger.LogError(ex, "An error occurred during migration and seeding");
+}
 
 app.Run();
