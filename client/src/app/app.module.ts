@@ -20,11 +20,13 @@ import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent,
+    NavComponent, // declares nav component
     HomeComponent,
     RegisterComponent,
     MemberDetailComponent,
@@ -33,7 +35,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     MessagesComponent,
     TestErrorComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    MemberCardComponent
   ],
   imports: [
     CommonModule,
@@ -44,10 +47,13 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     BrowserAnimationsModule,
     SharedModule
   ],
-  providers: [
+  providers: [ // interceptors are things that can apply to the whole app, do not need to be imported into each component
     {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
       useClass: ErrorInterceptor, // We import our interceptors
-      multi: true} // Angular has interceptots
+      multi: true}, // Angular has interceptots
+    {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
+      useClass: JwtInterceptor, // We import our interceptor we created
+      multi: true}, // Angular has interceptots
   ],
   bootstrap: [AppComponent]
 })
