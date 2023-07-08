@@ -3,7 +3,7 @@
         <h1>Your profile</h1>
     </div>
     <div class="col-8">
-        <div class="alert alert-info">
+        <div class="alert alert-info" *ngIf="editForm.dirty">
             <p><strong>Information: You have made changes. Any unsaved changes will be</strong></p>
         </div>
     </div>
@@ -29,8 +29,8 @@
                     <p>{{member.created}}</p>
                 </div>
             </div>
-            <div class="card-footer">
-                <button form="editForm" class="btn btn-success col-12">Save changes</button>
+            <div class="card-footer" >
+                <button form="editForm" class="btn btn-success col-12" [disabled]="!editForm.dirty">Save changes</button>
             </div>
         </div>
     </div>
