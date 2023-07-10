@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -23,6 +23,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule // Lists all imported modules that are shared amongst app parts
   ],
   providers: [ // interceptors are things that can apply to the whole app, do not need to be imported into each component
     {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
@@ -56,7 +58,11 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
       useClass: JwtInterceptor, // We import our interceptor we created
       multi: true}, // Angular has interceptots
+    {provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

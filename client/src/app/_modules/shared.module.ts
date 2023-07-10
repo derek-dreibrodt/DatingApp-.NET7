@@ -4,6 +4,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 
 
 // Lists out the 3rd party modules
@@ -15,7 +16,10 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
     TabsModule.forRoot(), // Allows creating ngx tabs
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'}), // ToastrModule added for notifications on side
-    NgxGalleryModule
+    NgxGalleryModule,
+    NgxSpinnerModule.forRoot({
+      type: 'line-scale-pulse-out'
+    }), // Needed for loading screen
   ],
   exports: [
     BsDropdownModule,
