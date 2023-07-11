@@ -18,14 +18,15 @@ import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
       positionClass: 'toast-bottom-right'}), // ToastrModule added for notifications on side
     NgxGalleryModule,
     NgxSpinnerModule.forRoot({
-      type: 'line-scale-pulse-out'
+      type: 'line-scale-party'
     }), // Needed for loading screen
   ],
   exports: [
     BsDropdownModule,
     ToastrModule,
     TabsModule,
-    NgxGalleryModule
+    NgxGalleryModule,
+    NgxSpinnerModule
   ]
 })
 export class SharedModule { }
