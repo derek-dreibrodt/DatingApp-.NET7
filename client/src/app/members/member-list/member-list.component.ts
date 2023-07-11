@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Member } from 'src/app/_modules/member';
 import { MembersService } from 'src/app/_services/members.service';
 
@@ -8,20 +9,13 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
-  members: Member[] = [];
+  members$: Observable<Member[]> | undefined;
 
   constructor(private memberService: MembersService) { }
 
   ngOnInit(): void {
-    this.loadMembers() // calls the method to load members on creation of the list of members
-  }
-
-  loadMembers() {
-    // loads the members by subscribing to the memberService's getMembers
-    // getMembers() just gets a list of the members from the API with the HTTP Authorization options (JSON auth token)
-    this.memberService.getMembers().subscribe({
-      next: members => this.members = members
-    })
-  }
+    this.members$ = this.memberService.getMembers(); // calls the method to load members on creation of the list of members
+  } // Get the members from the members service
+    // the members service is not destroyed when a component is destroyed
 
 }
