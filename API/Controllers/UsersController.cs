@@ -29,12 +29,12 @@ namespace API.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet]
+        [HttpGet] 
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
             IEnumerable<MemberDto> users = await _userRepository.GetMembersAsync();
 
-            return Ok(users);
+            return Ok(users); // Returns 200 OK
         }
 
         
@@ -86,7 +86,10 @@ namespace API.Controllers
 
             user.Photos.Add(photo); // Add the photo to their profile regardless
             
-            if (await _userRepository.SaveAllAsync()) return _mapper.Map<PhotoDto>(photo);
+            if (await _userRepository.SaveAllAsync()) return CreatedAtAction(nameof(GetUser), // The URL the new resource is at
+                new { username = user.UserName}, // We tell them to get the new resource at GetUser (sends a 204)
+                _mapper.Map<PhotoDto>(photo)) ; // We still send back the created resource
+            // _mapper.Map<PhotoDto>(photo);
 
             return BadRequest("Problem adding photo");
             
