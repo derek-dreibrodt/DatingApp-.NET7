@@ -52,7 +52,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.UserName);
+            var user = await _context.Users
+                .Include(u => u.Photos) // Need to include photos to return user's main photo
+                .SingleOrDefaultAsync(u => u.UserName == loginDto.UserName);
             // if user doesn't exist in the database, unauthorize them
             if (user == null) return Unauthorized("This user doesn't exist");
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -66,7 +68,8 @@ namespace API.Controllers
             return new UserDto 
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url // get URL of main photo - if old user, might not have main so optional chaining?
             };
         }
         
