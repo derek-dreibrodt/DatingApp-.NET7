@@ -117,5 +117,31 @@ namespace API.Controllers
             return BadRequest("Problem setting the main photo"); // If there is a problem saving, tell them
         }
         
+
+        [HttpDelete("delete-photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null) return NotFound();
+
+            if (photo.IsMain) return BadRequest ("You cannot delete your main photo");
+
+            if (photo.PublicId != null) // If there is a publicId on the photo, delete it
+            {
+                var result = await _photoService.DeletePhotoAsnc(photo.PublicId);
+                if (result.Error != null) return BadRequest(result.Error.Message); // if Cloudinary service has a problem deleting a photo, return the error they return
+
+            }
+
+            user.Photos.Remove(photo); // Remove the photo from the user's photo list
+
+            if (await _userRepository.SaveAllAsync()) return Ok(); // commit changes to database
+
+            return BadRequest("Problem deleting photo"); // if couldn't save changes, problem deleting photo
+        }
+        
     }
 }
