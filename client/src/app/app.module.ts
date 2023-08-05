@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -48,8 +48,13 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
     CommonModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
+    HttpClientModule, // Used for making an http client/service
+    FormsModule, // Used for making template forms (non-reactive)
+    ReactiveFormsModule, // Reactive forms requires a different import
+    // Reactive forms are
+    // 1. Easier to test (stuff goes on in ts, not html)
+    // 2. Quicker
+    // 3. Component-based
     BrowserAnimationsModule,
     SharedModule // Lists all imported modules that are shared amongst app parts
   ],
