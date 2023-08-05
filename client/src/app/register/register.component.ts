@@ -11,20 +11,38 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Vali
 export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   model: any = {}
+  registerForm: FormGroup = new FormGroup({}); // need to make form optional undefined if not instantiatign at this point
+  maxDate: Date = new Date();
+
+
   constructor(private accountService: AccountService, 
     private toastr: ToastrService, 
     private fb: FormBuilder
     ) { }
-  registerForm: FormGroup = new FormGroup({}); // need to make form optional undefined if not instantiatign at this point
+  
+
+  
   // Form parts will be form controls
   ngOnInit(): void {
     this.initializeForm();
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - 18)
   }
 
   initializeForm() {
     this.registerForm = this.fb.group({
+      gender: ['male'],
+
       username: ['', Validators.required],
-      
+
+      knownAs: ['', Validators.required],
+
+      dateOfBirth: ['', Validators.required],
+
+      city: ['', Validators.required],
+
+      country: ['', Validators.required],
+
+
       password: ['', 
         [Validators.required,  // Set validator state
         Validators.minLength(4), 
