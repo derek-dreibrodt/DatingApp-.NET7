@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -20,14 +20,26 @@ export class RegisterComponent implements OnInit {
 
   initializeForm() {
     this.registerForm = new FormGroup({
-      username: new FormControl('Hello', Validators.required),
-      password: new FormControl('Hello', 
-        [Validators.required, 
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', 
+        [Validators.required,  // Set validator state
         Validators.minLength(4), 
         Validators.maxLength(8)]),
-      confirmPassword: new FormControl(),
-      
+      confirmPassword: new FormControl('', [Validators.required, this.matchValues('password')]),
     })
+    this.registerForm.controls['password'].value.subscribe({ // subscribe to the value of the form's password
+      next: () => this.registerForm.controls['confirmPassword'] .updateValueAndValidity() // Check the validity when ??? is changed
+    })
+  }
+
+  matchValues(matchTo: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control.value === 
+        control. // compare one control's value to the value of the control's parent value
+        parent?. // Compare the value to the parent
+        get(matchTo)?. // See if the parent's value matches
+        value ? null: {notMatching: true} // If it is the alternate case with no case, we set property of notMatching to true
+    }
   }
 
   register() {
