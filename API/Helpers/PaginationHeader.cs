@@ -9,11 +9,11 @@ namespace API.Helpers
     {
         
 
-        public PaginationHeader(int currentPage, int ItemsPerPage, int totalItems, int totalPages) 
+        public PaginationHeader(int currentPage, int itemsPerPage, int totalItems, int totalPages) 
         {
             CurrentPage = currentPage;
             TotalItems = totalItems;
-            ItemsPerPage = ItemsPerPage;
+            ItemsPerPage = itemsPerPage;
             TotalPages = totalPages;
    
         }

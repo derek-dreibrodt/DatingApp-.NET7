@@ -4,6 +4,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -23,7 +24,8 @@ import { FileUploadModule } from 'ng2-file-upload';
       type: 'line-scale-party'
     }), // Needed for loading screen
     FileUploadModule, // Used for image upload
-    BsDatepickerModule.forRoot() // Used for date picker, ng bootstrap
+    BsDatepickerModule.forRoot(), // Used for date picker, ng bootstrap
+    PaginationModule.forRoot()
   ],
   exports: [
     BsDropdownModule,
@@ -32,7 +34,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     NgxGalleryModule,
     NgxSpinnerModule,
     FileUploadModule,
-    BsDatepickerModule
+    BsDatepickerModule,
+    PaginationModule
   ]
 })
 export class SharedModule { }

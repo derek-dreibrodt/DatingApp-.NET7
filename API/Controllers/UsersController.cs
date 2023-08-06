@@ -33,9 +33,22 @@ namespace API.Controllers
         [HttpGet] 
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams) // We need to convert query string to UserParams
         {
+            var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
+            userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+
             PagedList<MemberDto> users = await _userRepository.GetMembersAsync(userParams);
 
-            Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+            Response.AddPaginationHeader(new PaginationHeader(
+                users.CurrentPage, 
+                users.PageSize, 
+                users.TotalCount, 
+                users.TotalPages));
 
             return Ok(users); // Returns 200 OK
         }

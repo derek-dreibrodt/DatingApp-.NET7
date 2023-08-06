@@ -31,10 +31,20 @@ namespace API.Data
 
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams) // Returns an ienumerable of memberdtos
         {
-            var query = _context.Users 
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider) // Project - doesn't need Include for eager loading, already loads
-                .AsNoTracking(); // not necessary, just improves - entity framework doesn't track what we are returning
-            return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+            var query = _context.Users.AsQueryable();
+            query = query.Where(u => u.UserName != userParams.CurrentUsername); // excludes currently logged in user
+            query = query.Where(u => u.Gender == userParams.Gender); // filter on the gender they are searching for
+
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1)); // lowest value year AKA how old they can be
+            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+            query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+                
+            return await PagedList<MemberDto>.CreateAsync(
+                query.AsNoTracking()  // not necessary, just improves - entity framework doesn't track what we are returning, 
+                    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider), // Project - doesn't need Include for eager loading, already loads
+                userParams.PageNumber, 
+                userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
