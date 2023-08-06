@@ -1,21 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Member } from 'src/app/_modules/member';
+import { Member } from 'src/app/_models/member';
+import { Pagination } from 'src/app/_models/pagination';
 import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
   selector: 'app-member-list',
   templateUrl: './member-list.component.html',
-  styleUrls: ['./member-list.component.css']
+  styleUrls: ['./member-list.component.css'],
 })
 export class MemberListComponent implements OnInit {
-  members$: Observable<Member[]> | undefined;
+  //members$: Observable<Member[]> | undefined;
+  members: Member[] = [];
+  pagination: Pagination | undefined;
+  pageNumber = 1;
+  pageSize = 5;
 
-  constructor(private memberService: MembersService) { }
+  constructor(private memberService: MembersService) {}
 
   ngOnInit(): void {
-    this.members$ = this.memberService.getMembers(); // calls the method to load members on creation of the list of members
+    this.loadMembers();
   } // Get the members from the members service
-    // the members service is not destroyed when a component is destroyed
+  // the members service is not destroyed when a component is destroyed
 
+  loadMembers() {
+    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
+      next: response => {
+        if(response.result && response.pagination) {
+          this.members = response.result;
+          this.pagination = response.pagination; 
+        }
+      }
+    })
+  }
 }
