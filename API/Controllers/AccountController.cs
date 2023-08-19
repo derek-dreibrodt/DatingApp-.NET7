@@ -50,6 +50,7 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
+                Gender = user.Gender
             }   ;
 
         }
@@ -74,7 +75,8 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url // get URL of main photo - if old user, might not have main so optional chaining?
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url, // get URL of main photo - if old user, might not have main so optional chaining?
+                Gender = user.Gender
             };
         }
         
