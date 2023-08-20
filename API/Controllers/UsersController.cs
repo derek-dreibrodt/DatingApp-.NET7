@@ -42,6 +42,8 @@ namespace API.Controllers
                 userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
             }
 
+            
+
             PagedList<MemberDto> users = await _userRepository.GetMembersAsync(userParams);
 
             Response.AddPaginationHeader(new PaginationHeader(
