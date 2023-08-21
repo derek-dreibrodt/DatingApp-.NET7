@@ -8,6 +8,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 
 // Lists out the 3rd party modules
@@ -25,7 +26,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     }), // Needed for loading screen
     FileUploadModule, // Used for image upload
     BsDatepickerModule.forRoot(), // Used for date picker, ng bootstrap
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot()
   ],
   exports: [
     BsDropdownModule,
@@ -35,7 +37,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     NgxSpinnerModule,
     FileUploadModule,
     BsDatepickerModule,
-    PaginationModule
+    PaginationModule,
+    ButtonsModule,
   ]
 })
 export class SharedModule { }

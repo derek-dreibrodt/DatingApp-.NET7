@@ -55,7 +55,7 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByIdAsync(int id)
         {
-            return await _context.Users.FindAsync(id); // Caches current user - more efficient. Also doesn't have join on photos
+            return await _context.Users.FindAsync(id); // Caches current user - more efficient. Also doesn't have join
         }
  
         public async Task<AppUser> GetUserByUsernameAsync(string username)
