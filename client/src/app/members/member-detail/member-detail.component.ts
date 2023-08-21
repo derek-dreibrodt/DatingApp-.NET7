@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -5,13 +6,16 @@ import {
   NgxGalleryImage,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
   selector: 'app-member-detail',
+  standalone: false, // makes the imports not separate
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css'],
+  //imports: [CommonModule, TabsModule, ngxGalleryModule]
 })
 export class MemberDetailComponent implements OnInit {
   member: Member | undefined;

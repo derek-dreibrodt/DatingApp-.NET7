@@ -9,7 +9,7 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-
+import { TimeagoModule } from "ngx-timeago";
 
 // Lists out the 3rd party modules
 @NgModule({
@@ -27,7 +27,8 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
     FileUploadModule, // Used for image upload
     BsDatepickerModule.forRoot(), // Used for date picker, ng bootstrap
     PaginationModule.forRoot(),
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   exports: [
     BsDropdownModule,
@@ -39,6 +40,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
+    TimeagoModule
   ]
 })
 export class SharedModule { }
