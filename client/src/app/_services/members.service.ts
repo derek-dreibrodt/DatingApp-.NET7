@@ -41,6 +41,37 @@ export class MembersService {
     ); // Get a paginated list of users + pagination header (has extra values)
   }
 
+  
+
+  getMember(username: string) {
+    // Get the member and "cache"
+    const member = [...this.memberCache.values()]
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((member: Member) => member.userName === username);
+    console.log(member)
+    if (member) return of(member); // If they are already loaded, return them
+    return this.http.get<Member>(this.baseUrl + 'users/' + username); // Do not cache all members if just getting 1
+  }
+
+  updateMember(member: Member) {
+    return this.http.put(this.baseUrl + 'users', member).pipe(
+      map(() => {
+        const index = this.members.indexOf(member); // tells us the index of the member in the "cached" array
+        // the spread operator "..." takes the properties of this.getMembers[index] aka member and "spreads" them.
+        // It then spreads the "member" (updated) properties over the older properties
+        this.members[index] = { ...this.members[index], ...member };
+      })
+    );
+  }
+
+  setMainPhoto(photoId: number) {
+    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
+  }
+
+  deletePhoto(photoId: number) {
+    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId); // call http service and delete in database via url
+  }
+
   private getPaginatedResults<T>(url: string, params: HttpParams) {
     const paginatedResult: PaginatedResult<T[]> = new PaginatedResult<T[]>;
     return this.http.get<T[]>(url, { observe: 'response', params }).pipe(
@@ -64,31 +95,5 @@ export class MembersService {
     params = params.append('pageSize', pageSize);
     
     return params;
-  }
-
-  getMember(username: string) {
-    // Get the member and "cache"
-    const member = this.members.find((x) => x.userName == username);
-    if (member) return of(member); // If they are already loaded, return them
-    return this.http.get<Member>(this.baseUrl + 'users/' + username); // Do not cache all members if just getting 1
-  }
-
-  updateMember(member: Member) {
-    return this.http.put(this.baseUrl + 'users', member).pipe(
-      map(() => {
-        const index = this.members.indexOf(member); // tells us the index of the member in the "cached" array
-        // the spread operator "..." takes the properties of this.getMembers[index] aka member and "spreads" them.
-        // It then spreads the "member" (updated) properties over the older properties
-        this.members[index] = { ...this.members[index], ...member };
-      })
-    );
-  }
-
-  setMainPhoto(photoId: number) {
-    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
-  }
-
-  deletePhoto(photoId: number) {
-    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId); // call http service and delete in database via url
   }
 }
