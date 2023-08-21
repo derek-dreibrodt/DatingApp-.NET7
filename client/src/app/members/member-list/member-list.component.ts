@@ -17,22 +17,14 @@ export class MemberListComponent implements OnInit {
   members: Member[] = [];
   pagination: Pagination | undefined;
   userParams: UserParams | undefined;
-  user: User | undefined;
   genderList = [
     {value: 'male', display: 'Males'},
     {value: 'female', display: 'Females'}
   ]
   
 
-  constructor(private memberService: MembersService, private accountService : AccountService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: user => {
-        if (user) {
-          this.userParams = new UserParams(user); // Set the parameters based on the user
-          this.user = user;
-        }
-      }
-    })
+  constructor(private memberService: MembersService) {
+    this.userParams = this.memberService.getUserParams();
   }
 
   ngOnInit(): void {
@@ -41,27 +33,30 @@ export class MemberListComponent implements OnInit {
   // the members service is not destroyed when a component is destroyed
 
   loadMembers() {
-    if(!this.userParams) return; // if no parameters, don't try to load the members
-    this.memberService.getMembers(this.userParams).subscribe({
-      next: response => {
-        if(response.result && response.pagination) {
-          this.members = response.result;
-          this.pagination = response.pagination; 
+    if(this.userParams) {
+      this.memberService.setUserParams(this.userParams); // set the current search params when loading members in the member service (So page is remembered)
+      this.memberService.getMembers(this.userParams).subscribe({
+        next: response => {
+          if(response.result && response.pagination) {
+            this.members = response.result;
+            this.pagination = response.pagination; 
+          }
         }
-      }
-    })
+      })
+    }; // if no parameters, don't try to load the members
+    
   }
 
   resetFilters() {
-    if (this.user) {
-      this.userParams = new UserParams(this.user); // Set the default parameters
-      this.loadMembers(); // load the new list of members based on the user params
-    }
+    this.userParams = this.memberService.resetUserParams(); // 
+    this.loadMembers(); // load the new list of members based on the user params
+    
   }
 
   pageChanged(event: any) { // if the current page number isn't equal to
     if (this.userParams && this.userParams?.pageNumber !== event.page ) {
       this.userParams.pageNumber = event.page;
+      this.memberService.setUserParams(this.userParams);
       this.loadMembers();
     }
   }
