@@ -12,11 +12,17 @@ import { UserParams } from '../_models/userParams';
 export class MembersService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
+  memberCache = new Map(); // cache
   
 
   constructor(private http: HttpClient) {}
 
   getMembers(userParams: UserParams) {
+    const response = this.memberCache.get(Object.values(userParams).join('-'));
+
+    if (response) return of(response);
+
+
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
     params = params.append('minAge', userParams.minAge);
@@ -27,7 +33,12 @@ export class MembersService {
 
     // if (this.members.length > 0) return of(this.members); // Check if the members are "cached"
 
-    return this.getPaginatedResults<Member>(this.baseUrl + 'users', params); // Get a paginated list of users + pagination header (has extra values)
+    return this.getPaginatedResults<Member>(this.baseUrl + 'users', params).pipe(
+      map(response => {
+        this.memberCache.set(Object.values(userParams).join('-'), response); // cache the response with each call
+        return response;
+      })
+    ); // Get a paginated list of users + pagination header (has extra values)
   }
 
   private getPaginatedResults<T>(url: string, params: HttpParams) {
