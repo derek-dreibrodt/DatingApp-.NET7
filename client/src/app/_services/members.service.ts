@@ -107,7 +107,8 @@ export class MembersService {
   }
 
   getLikes(predicate: string) {
-    return this.http.get(this.baseUrl + 'likes?predicate=' + predicate)
+    // <Member[]> indicates we will have a return type of Member[]
+    return this.http.get<Member[]>(this.baseUrl + 'likes?predicate=' + predicate)
   }
 
   private getPaginatedResults<T>(url: string, params: HttpParams) {
