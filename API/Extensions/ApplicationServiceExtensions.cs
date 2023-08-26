@@ -34,6 +34,9 @@ namespace API.Extensions
             // Add service for action filter for logging users' activity
             services.AddScoped<LogUserActivity>();
 
+            // Add service for likes
+            services.AddScoped<ILikesRepository, LikesRepository>();
+
 
 
             return services;
