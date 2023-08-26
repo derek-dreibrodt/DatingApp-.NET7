@@ -38,6 +38,9 @@ namespace API.Entities
 
         public List<Photo> Photos { get; set; } = new(); // creates new list of photos on creation if null
 
+        public List<UserLike> LikedByUsers { get; set; }
+        public List<UserLike> LikedUsers { get; set; }
+
 
         // public int GetAge()
         // {
