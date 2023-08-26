@@ -102,6 +102,14 @@ export class MembersService {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId); // call http service and delete in database via url
   }
 
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string) {
+    return this.http.get(this.baseUrl + 'likes?predicate=' + predicate)
+  }
+
   private getPaginatedResults<T>(url: string, params: HttpParams) {
     const paginatedResult: PaginatedResult<T[]> = new PaginatedResult<T[]>;
     return this.http.get<T[]>(url, { observe: 'response', params }).pipe(

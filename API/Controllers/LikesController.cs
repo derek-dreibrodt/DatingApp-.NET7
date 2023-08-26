@@ -1,15 +1,16 @@
 using API.Data;
 using API.Entities;
 using API.Extensions;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     public class LikesController : BaseApiController
     {
-        private readonly LikesRepository _likesRepository;
-        private readonly UserRepository _userRepository;
-        public LikesController(UserRepository userRepository, LikesRepository likesRepository)
+        private readonly ILikesRepository _likesRepository;
+        private readonly IUserRepository _userRepository;
+        public LikesController(IUserRepository userRepository, ILikesRepository likesRepository)
         {
             _userRepository = userRepository;
             _likesRepository = likesRepository;
