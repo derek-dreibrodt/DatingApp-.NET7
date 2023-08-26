@@ -19,7 +19,8 @@ namespace API.Data
             base.OnModelCreating(builder); // Not including could cause bugs
 
             builder.Entity<UserLike>()
-                .HasKey(k => new {k.SourceUserId, k.TargetUserId}); // Represents primay key in the likes table
+                .HasKey(k => new {k.SourceUserId, k.TargetUserId}); // Represents primay key in the likes table, composite primary key
+            
             builder.Entity<UserLike>()
                 .HasOne(s => s.SourceUser) // source user can like many users
                 .WithMany(l => l.LikedUsers)
