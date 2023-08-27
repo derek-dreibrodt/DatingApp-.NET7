@@ -13,7 +13,7 @@ namespace API.Data
 
         public DbSet<UserLike> Likes { get; set; }
 
-        //public DbSet<Photo> Photos {get; set; }
+        public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder); // Not including could cause bugs
@@ -33,6 +33,15 @@ namespace API.Data
                 .HasForeignKey(s => s.TargetUserId) // foreign key for the relationship
                 .OnDelete(DeleteBehavior.Cascade);
             // Can't have both be DeleteBehavior.Cascade with SQL server - only other databases
+            builder.Entity<Message>()
+                .HasOne(m => m.Recipient) // source user can like many users
+                .WithMany(l => l.MessagesReceived)
+                .OnDelete(DeleteBehavior.Restrict); // Shouldn't delete message just because users have removed their profile
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender) // target user can be liked by many users
+                .WithMany(l => l.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -39,7 +39,7 @@ var services = scope.ServiceProvider; // -> this allows scope of the services of
 try
 {
     var context = services.GetRequiredService<DataContext>(); // Add the DbContext service to the scope of this try block in "context" var
-    await context.Database.MigrateAsync(); // Creates a clean database if it is deleted/doesn't have migrations applied
+    await context.Database.MigrateAsync(); // Creates a clean database if it is deleted/doesn't have migrations applied - removes need for 'dotnet ef migrations add {name}'
     await Seed.SeedUsers(context); // calls seed user upon creation
 }
 catch (Exception ex)
