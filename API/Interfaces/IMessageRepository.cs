@@ -15,7 +15,7 @@ namespace API.Interfaces
 
         Task<Message> GetMessage(int id);
         Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams); // Will treat it like an unread inbox and outbox for messages
-        Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId, int recipientId);
+        Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName);
         Task<bool> SaveAllAsync();
     }
 }

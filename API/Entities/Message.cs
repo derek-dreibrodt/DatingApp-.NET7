@@ -9,7 +9,7 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public int SenderId { get; set; }
-        public string SenderUserNAme { get; set; }
+        public string SenderUserName { get; set; }
 
         public AppUser Sender { get; set; }
 

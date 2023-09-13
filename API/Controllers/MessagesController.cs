@@ -48,7 +48,7 @@ namespace API.Controllers
             {
                 Sender = sender, // we can use either the direct class or its ID - entity framework can figure the rest out
                 Recipient = recipient,
-                SenderUserNAme = sender.UserName,
+                SenderUserName = sender.UserName,
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };
@@ -71,6 +71,13 @@ namespace API.Controllers
 
             return messages;
 
+        }
+
+        [HttpGet("thread/{username}")]
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+        {
+            var currentUserName = User.GetUsername();
+            return Ok(await _messageRepository.GetMessageThread(currentUserName, username));
         }
     }
 }

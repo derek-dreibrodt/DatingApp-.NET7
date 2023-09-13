@@ -8,6 +8,7 @@ using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace API.Data
@@ -44,7 +45,7 @@ namespace API.Data
             query = messageParams.Container switch
             {
                 "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username), // If getting inbox, get messages where recipient username is the username
-                "Outbox" => query.Where(u => u.SenderUserNAme == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
+                "Outbox" => query.Where(u => u.SenderUserName == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
                 _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null) // if no box specified, get the messages that are unread and the recipient is user
 
             };
@@ -53,9 +54,31 @@ namespace API.Data
             
         }
 
-        public Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId, int recipientId)
+        public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
         {
-            throw new NotImplementedException();
+            var messages = await _context.Messages
+                .Include(m => m.Sender).ThenInclude(u => u.Photos)
+                .Include(m => m.Recipient).ThenInclude(u => u.Photos)
+                .Where(
+                    m => 
+                    (m.RecipientUsername == currentUserName && m.SenderUserName == recipientUserName) || // Get the thread where they are sending or receiving to/from each other only
+                    (m.RecipientUsername == recipientUserName && m.SenderUserName == currentUserName)
+                )
+                .OrderByDescending(m => m.MessageSent)
+                .ToListAsync();
+            var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUserName).ToList(); // filter against in-memory data
+
+            if (unreadMessages.Any())
+            {
+                foreach(Message message in unreadMessages)
+                {
+                    message.DateRead = DateTime.UtcNow; // mark message as read when received by the recipient
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            return _mapper.Map<IEnumerable<MessageDto>>(messages); // map to message DTO
+
         }
 
         public async Task<bool> SaveAllAsync()
