@@ -6,6 +6,8 @@ using API.DTOs;
 using API.Entities;
 using API.Helpers;
 using API.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 
 namespace API.Data
@@ -13,8 +15,10 @@ namespace API.Data
     public class MessageRepository : IMessageRepository
     {
         private readonly DataContext _context;
-        public MessageRepository(DataContext context)
+        private readonly IMapper _mapper;
+        public MessageRepository(DataContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
         public void AddMessage(Message message)
@@ -32,9 +36,21 @@ namespace API.Data
             return await _context.Messages.FindAsync(id);
         }
 
-        public Task<PagedList<MessageDto>> GetMessagesForUser()
+        public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
+
         {
-            throw new NotImplementedException();
+            var query = _context.Messages.OrderByDescending(x => x.MessageSent).AsQueryable(); // Order the messages by the date sent
+
+            query = messageParams.Container switch
+            {
+                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username), // If getting inbox, get messages where recipient username is the username
+                "Outbox" => query.Where(u => u.SenderUserNAme == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
+                _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null) // if no box specified, get the messages that are unread and the recipient is user
+
+            };
+            var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+            return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize); // Call PagedList.CreateAsync with dto as the type
+            
         }
 
         public Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId, int recipientId)
