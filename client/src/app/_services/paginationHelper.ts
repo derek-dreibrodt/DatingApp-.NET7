@@ -4,8 +4,8 @@ import { map } from "rxjs";
 
 // Moved
 export function getPaginatedResults<T>(url: string, params: HttpParams, http: HttpClient) {
-    const paginatedResult: PaginatedResult<T[]> = new PaginatedResult<T[]>;
-    return http.get<T[]>(url, { observe: 'response', params }).pipe(
+    const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>;
+    return http.get<T>(url, { observe: 'response', params }).pipe(
       map(response => { // project response
         if (response.body) {
           paginatedResult.result = response.body; // Get the list of paginated items

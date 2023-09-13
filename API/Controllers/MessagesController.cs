@@ -60,8 +60,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<MessageDto>>> GetMessagesForUser([FromQuery]
-            MessageParams messageParams)
+        public async Task<ActionResult<PagedList<MessageDto>>> GetMessagesForUser([FromQuery]MessageParams messageParams)
         {
             messageParams.Username = User.GetUsername(); // get current user and set the username for params
             

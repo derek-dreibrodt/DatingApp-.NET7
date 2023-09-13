@@ -64,7 +64,7 @@ export class MembersService {
 
     // if (this.members.length > 0) return of(this.members); // Check if the members are "cached"
 
-    return getPaginatedResults<Member>(this.baseUrl + 'users', params, this.http).pipe(
+    return getPaginatedResults<Member[]>(this.baseUrl + 'users', params, this.http).pipe(
       map(response => {
         this.memberCache.set(Object.values(userParams).join('-'), response); // cache the response with each call
         return response;
@@ -112,7 +112,7 @@ export class MembersService {
     let params = getPaginationHeaders(pageNumber, pageSize)
     params = params.append('predicate', predicate);
     // <Member[]> indicates we will have a return type of Member[]
-    return getPaginatedResults<Member>(this.baseUrl + 'likes', params, this.http);
+    return getPaginatedResults<Member[]>(this.baseUrl + 'likes', params, this.http);
   }
 
   
