@@ -47,8 +47,7 @@
                  class="ngx-gallery"></ngx-gallery>
             </tab>
             <tab heading="Messages with {{member.knownAs}}">
-                <h4>Messages</h4>
-                <p>Messages will go here</p>
+                <app-member-messages [username]="member.userName"></app-member-messages>
             </tab>
         </tabset>
     </div>

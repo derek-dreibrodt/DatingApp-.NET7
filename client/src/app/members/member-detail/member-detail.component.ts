@@ -4,18 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import {
   NgxGalleryAnimation,
   NgxGalleryImage,
+  NgxGalleryModule,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TimeagoModule } from 'ngx-timeago';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
+import { MemberMessagesComponent } from '../member-messages/member-messages.component';
 
 @Component({
   selector: 'app-member-detail',
-  standalone: false, // makes the imports not separate
+  standalone: true, // makes the imports not separate
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css'],
-  //imports: [CommonModule, TabsModule, ngxGalleryModule]
+  imports: [CommonModule, TabsModule, NgxGalleryModule, TimeagoModule, MemberMessagesComponent]
 })
 export class MemberDetailComponent implements OnInit {
   member: Member | undefined;

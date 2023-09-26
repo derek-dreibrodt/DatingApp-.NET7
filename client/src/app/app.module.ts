@@ -28,6 +28,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DatePickerComponent } from './_forms/date-picker/date-picker.component';
+//import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { DatePickerComponent } from './_forms/date-picker/date-picker.component'
     NavComponent, // declares nav component
     HomeComponent,
     RegisterComponent,
-    MemberDetailComponent,
+    //MemberDetailComponent, // standalone so we don't import it
     MemberListComponent,
     ListsComponent,
     MessagesComponent,
@@ -46,7 +47,8 @@ import { DatePickerComponent } from './_forms/date-picker/date-picker.component'
     MemberEditComponent,
     PhotoEditorComponent,
     TextInputComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    //MemberMessagesComponent, // standalone so we don't import it
   ],
   imports: [
     CommonModule,
@@ -60,20 +62,23 @@ import { DatePickerComponent } from './_forms/date-picker/date-picker.component'
     // 2. Quicker
     // 3. Component-based
     BrowserAnimationsModule,
-    SharedModule // Lists all imported modules that are shared amongst app parts
+    SharedModule, // Lists all imported modules that are shared amongst app parts
   ],
-  providers: [ // interceptors are things that can apply to the whole app, do not need to be imported into each component
-    {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
+  providers: [
+    // interceptors are things that can apply to the whole app, do not need to be imported into each component
+    {
+      provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
       useClass: ErrorInterceptor, // We import our interceptors
-      multi: true}, // Angular has interceptots
-    {provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
+      multi: true,
+    }, // Angular has interceptots
+    {
+      provide: HTTP_INTERCEPTORS, // we specify what type of interceptors they are
       useClass: JwtInterceptor, // We import our interceptor we created
-      multi: true}, // Angular has interceptots
-    {provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
-      multi: true}
+      multi: true,
+    }, // Angular has interceptots
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}
