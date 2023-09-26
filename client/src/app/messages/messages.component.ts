@@ -11,7 +11,7 @@ import { Message } from '../_models/message';
 export class MessagesComponent implements OnInit {
   messages?: Message[]; // message is Message[] or undefined
   pagination?: Pagination;
-  container = "Outbox";
+  container = "Unread";
   pageNumber = 1;
   pageSize = 5;
 

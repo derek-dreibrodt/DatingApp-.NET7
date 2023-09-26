@@ -45,7 +45,7 @@ namespace API.Data
             query = messageParams.Container switch
             {
                 "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username), // If getting inbox, get messages where recipient username is the username
-                "Outbox" => query.Where(u => u.SenderUserName == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
+                "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
                 _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null) // if no box specified, get the messages that are unread and the recipient is user
 
             };
@@ -61,8 +61,8 @@ namespace API.Data
                 .Include(m => m.Recipient).ThenInclude(u => u.Photos)
                 .Where(
                     m => 
-                    (m.RecipientUsername == currentUserName && m.SenderUserName == recipientUserName) || // Get the thread where they are sending or receiving to/from each other only
-                    (m.RecipientUsername == recipientUserName && m.SenderUserName == currentUserName)
+                    (m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName) || // Get the thread where they are sending or receiving to/from each other only
+                    (m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName)
                 )
                 .OrderByDescending(m => m.MessageSent)
                 .ToListAsync();

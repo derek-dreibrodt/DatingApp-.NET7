@@ -48,7 +48,7 @@ namespace API.Controllers
             {
                 Sender = sender, // we can use either the direct class or its ID - entity framework can figure the rest out
                 Recipient = recipient,
-                SenderUserName = sender.UserName,
+                SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };

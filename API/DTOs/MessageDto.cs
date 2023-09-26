@@ -4,7 +4,7 @@ namespace API.DTOs
     {
         public int Id { get; set; }
         public int SenderId { get; set; }
-        public string SenderUserNAme { get; set; }
+        public string SenderUsername { get; set; }
         public string SenderPhotoUrl { get; set; }
         public int RecicipientId { get; set; }
         public string RecipientUsername { get; set; }
