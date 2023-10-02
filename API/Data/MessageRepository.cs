@@ -44,9 +44,9 @@ namespace API.Data
 
             query = messageParams.Container switch
             {
-                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username), // If getting inbox, get messages where recipient username is the username
-                "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username), // If getting outbox (sent), get messages where sender is the username
-                _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null) // if no box specified, get the messages that are unread and the recipient is user
+                "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false), // If getting inbox, get messages where recipient username is the username
+                "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username && u.SenderDeleted == false), // If getting outbox (sent), get messages where sender is the username
+                _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null && u.RecipientDeleted == false) // if no box specified, get the messages that are unread and the recipient is user
 
             };
             var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
@@ -60,9 +60,9 @@ namespace API.Data
                 .Include(m => m.Sender).ThenInclude(u => u.Photos)
                 .Include(m => m.Recipient).ThenInclude(u => u.Photos)
                 .Where(
-                    m => 
-                    (m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName) || // Get the thread where they are sending or receiving to/from each other only
-                    (m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName)
+                    m => // Get the thread where they are sending or receiving to/from each other only
+                    (m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName && m.RecipientDeleted == false) || // Get the non-deleted messages to the current user (inbox)
+                    (m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName && m.SenderDeleted == false) // Get the non-deleted messages from the current user (outbox)
                 )
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
