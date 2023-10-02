@@ -93,7 +93,7 @@ namespace API.Controllers
 
             if (message.RecipientUsername == username) message.RecipientDeleted = true;
 
-            if (message.ReceipientDeleted && message.SenderDeleted)
+            if (message.RecipientDeleted && message.SenderDeleted)
             {
                 _messageRepository.DeleteMessage(message);
             }

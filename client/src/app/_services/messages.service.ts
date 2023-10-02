@@ -27,4 +27,8 @@ export class MessagesService {
     {RecipientUsername: username, content} // Body values MUST match the DTO for creating a message
     );
   }
+
+  deleteMessage(id: number) {
+    return this.http.delete(this.baseUrl + 'messages/' + id);
+  }
 }
