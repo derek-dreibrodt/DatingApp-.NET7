@@ -64,7 +64,7 @@ namespace API.Data
                     (m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName) || // Get the thread where they are sending or receiving to/from each other only
                     (m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName)
                 )
-                .OrderByDescending(m => m.MessageSent)
+                .OrderBy(m => m.MessageSent)
                 .ToListAsync();
             var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUserName).ToList(); // filter against in-memory data
 
