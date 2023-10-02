@@ -14,6 +14,7 @@ import { MembersService } from 'src/app/_services/members.service';
 import { MemberMessagesComponent } from '../member-messages/member-messages.component';
 import { MessagesService } from 'src/app/_services/messages.service';
 import { Message } from 'src/app/_models/message';
+import { MemberEditComponent } from '../member-edit/member-edit.component';
 
 @Component({
   selector: 'app-member-detail',
@@ -23,9 +24,9 @@ import { Message } from 'src/app/_models/message';
   imports: [CommonModule, TabsModule, NgxGalleryModule, TimeagoModule, MemberMessagesComponent]
 })
 export class MemberDetailComponent implements OnInit {
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
   
-  member: Member | undefined;
+  member: Member = {} as Member; //initialized the member as an empty member
   activeTab?: TabDirective;
   messages: Message[] = [];
 
@@ -39,13 +40,15 @@ export class MemberDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void { // happens before view is initialized
-    this.loadMember();
+    this.route.data.subscribe({
+      next: data => this.member = data['member'] // matches what we called the parameter in the resolve: {member} in app.routing
+    })
     this.route.queryParams.subscribe({
       next: params => {
         params['tab'] && this.selectTab(params['tab']) // If 'tab' is in params, select the tab
       }
     })
-
+    this.galleryImages = this.getImages();
     this.galleryOptions = [
       {
         width: '600px',
@@ -94,14 +97,5 @@ export class MemberDetailComponent implements OnInit {
     return imageUrls;
   }
 
-  loadMember() {
-    const username = this.route.snapshot.paramMap.get('username');
-    if (!username) return;
-    this.memberService.getMember(username).subscribe({
-      next: (member) => {
-        this.member = member;
-        this.galleryImages = this.getImages();
-      },
-    });
-  }
+
 }
