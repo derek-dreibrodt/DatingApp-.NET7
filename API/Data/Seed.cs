@@ -26,9 +26,7 @@ namespace API.Data.Migrations
             {
                 using var hmac = new HMACSHA512();
 
-                user.UserName = user.UserName.ToLower();
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-                user.PasswordSalt = hmac.Key;
+                user.UserName = user.UserName.ToLower(); // "Pa$$w0rd"
 
                 context.Users.Add(user);
             }
