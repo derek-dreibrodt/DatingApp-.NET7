@@ -37,7 +37,7 @@ namespace API.Entities
         public List<Message> MessagesSent { get; set; }
         public List<Message> MessagesReceived { get; set; }
 
-        public ICollection<AppUserRole> AppUserRoles { get; set; } // Allows user to have multiple roles
+        public ICollection<AppUserRole> UserRoles { get; set; } // Allows user to have multiple roles
 
         // public int GetAge()
         // {
