@@ -1,7 +1,9 @@
 using API.Data;
 using API.Data.Migrations;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,8 +41,9 @@ var services = scope.ServiceProvider; // -> this allows scope of the services of
 try
 {
     var context = services.GetRequiredService<DataContext>(); // Add the DbContext service to the scope of this try block in "context" var
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
     await context.Database.MigrateAsync(); // Creates a clean database if it is deleted/doesn't have migrations applied - removes need for 'dotnet ef migrations add {name}'
-    //await Seed.SeedUsers(context); // calls seed user upon creation
+    await Seed.SeedUsers(userManager); // calls seed user upon creation
 }
 catch (Exception ex)
 {
