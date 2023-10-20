@@ -42,8 +42,9 @@ try
 {
     var context = services.GetRequiredService<DataContext>(); // Add the DbContext service to the scope of this try block in "context" var
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync(); // Creates a clean database if it is deleted/doesn't have migrations applied - removes need for 'dotnet ef migrations add {name}'
-    await Seed.SeedUsers(userManager); // calls seed user upon creation
+    await Seed.SeedUsers(userManager, roleManager); // calls seed user upon creation
 }
 catch (Exception ex)
 {
