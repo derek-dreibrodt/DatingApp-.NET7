@@ -31,6 +31,7 @@ namespace API.Controllers
         }
 
         [HttpGet] 
+        //[Authorize((Roles="Admin"))]
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams) // We need to convert query string to UserParams
         {
             var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUsername());

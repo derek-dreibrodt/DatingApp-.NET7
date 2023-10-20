@@ -51,7 +51,7 @@ namespace API.Controllers
             return new UserDto 
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
                 Gender = user.Gender
             } ;
@@ -70,10 +70,12 @@ namespace API.Controllers
 
             if (!result) return Unauthorized("Invalid login"); 
 
+            var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url, // get URL of main photo - if old user, might not have main so optional chaining?
                 Gender = user.Gender
