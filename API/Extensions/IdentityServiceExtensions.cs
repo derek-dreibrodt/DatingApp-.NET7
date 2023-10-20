@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,10 +24,10 @@ namespace API.Extensions
                 opt.Password.RequireNonAlphanumeric = false;
                 //opt.User.RequireUniqueEmail;
             })
-            .AddRoles<AppRole>()
-            .AddRoleManager<RoleManager<AppRole>>() // Configures RoleManager service
-            .AddEntityFrameworkStores<DataContext>(); // Creates all the tables related to identity in our database
-
+                .AddRoles<AppRole>()
+                .AddRoleManager<RoleManager<AppRole>>() // Configures RoleManager service
+                .AddEntityFrameworkStores<DataContext>(); // Creates all the tables related to identity in our database
+            // Authentication always comes before authorization
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer (options =>
             {
@@ -38,6 +39,12 @@ namespace API.Extensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin")); //another way to add authorization
+                opt.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
             });
         }
     }
