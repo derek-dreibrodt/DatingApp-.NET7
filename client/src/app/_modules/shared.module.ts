@@ -10,6 +10,7 @@ import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from "ngx-timeago";
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 // Lists out the 3rd party modules
 @NgModule({
@@ -28,7 +29,8 @@ import { TimeagoModule } from "ngx-timeago";
     BsDatepickerModule.forRoot(), // Used for date picker, ng bootstrap
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
-    TimeagoModule.forRoot()
+    TimeagoModule.forRoot(),
+    ModalModule.forRoot(),
   ],
   exports: [
     BsDropdownModule,
@@ -40,7 +42,8 @@ import { TimeagoModule } from "ngx-timeago";
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
-    TimeagoModule
+    TimeagoModule,
+    ModalModule
   ]
 })
 export class SharedModule { }
