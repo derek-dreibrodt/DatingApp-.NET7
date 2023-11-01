@@ -44,6 +44,9 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role; // Claim name is "role" whether it is plural or not
+    Array.isArray(roles) ? user.roles = roles: user.roles.push(roles); // Either way we are working with an array
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -51,5 +54,9 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null)
+  }
+
+  getDecodedToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1])) // Get the 2nd value in the token (the token data)
   }
 }
